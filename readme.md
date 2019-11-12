@@ -1,0 +1,4 @@
+- rn 0.61.4
+- react-native-elements
+- react-navigation ...
+- redux, saga
