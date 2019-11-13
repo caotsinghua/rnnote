@@ -15,6 +15,8 @@ import { Text, Dimensions } from 'react-native'
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createAppContainer } from 'react-navigation'
+import { ThemeProvider } from 'react-native-elements'
+import theme from './config/theme'
 const usingHermes = typeof HermesInternal === 'object' && HermesInternal !== null
 
 const AccountLazy = lazy(() => import('./views/Account'))
@@ -50,7 +52,7 @@ const DrawerStack = createDrawerNavigator(
     Account
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Home'
     // drawerWidth
     // contentComponent 侧边栏列表内容，暂时空置
   }
@@ -68,7 +70,11 @@ const RootStack = createStackNavigator(
 )
 const AppContainer = createAppContainer(RootStack)
 const App = () => {
-  return <AppContainer />
+  return (
+    <ThemeProvider theme={theme}>
+      <AppContainer />
+    </ThemeProvider>
+  )
 }
 
 export default App

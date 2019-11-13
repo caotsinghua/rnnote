@@ -52,7 +52,6 @@ const AppHeader: React.FC<HeaderProps> = ({ navigation, title, leftType = 'menu'
   return (
     <Header
       placement="center"
-    //   containerStyle={{ paddingTop: 0, height: 56 }}
       leftComponent={leftComponent}
       centerComponent={centerComponent}
     ></Header>
