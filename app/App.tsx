@@ -14,8 +14,10 @@ import { Text, Dimensions } from 'react-native'
 
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import { createStackNavigator } from 'react-navigation-stack'
-import { createAppContainer } from 'react-navigation'
+import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import { ThemeProvider } from 'react-native-elements'
+import DrawerContent from './components/DrawerContent'
+import AuthLoading from './views/AuthLoading'
 import theme from './config/theme'
 const usingHermes = typeof HermesInternal === 'object' && HermesInternal !== null
 
@@ -52,23 +54,46 @@ const DrawerStack = createDrawerNavigator(
     Account
   },
   {
-    initialRouteName: 'Home'
+    initialRouteName: 'Home',
     // drawerWidth
-    // contentComponent 侧边栏列表内容，暂时空置
+    contentComponent: DrawerContent, //侧边栏列表内容，暂时空置
+    drawerType: 'slide'
   }
 )
-const RootStack = createStackNavigator(
+/**
+ * 主界面路由栈
+ */
+const HomeStack = createStackNavigator(
   {
-    DrawerStack,
-    Login,
-    Register
+    DrawerStack
   },
   {
     initialRouteName: 'DrawerStack',
     headerMode: 'none'
   }
 )
-const AppContainer = createAppContainer(RootStack)
+// 登陆注册
+const AuthStack = createStackNavigator(
+  {
+    Login,
+    Register
+  },
+  {
+    headerMode: 'none'
+  }
+)
+console.log('【initapp】初始化路由')
+const AppSwitchStack = createSwitchNavigator(
+  {
+    Home: HomeStack,
+    Auth: AuthStack,
+    AuthLoading // 中转登陆状态，也许可用首屏替代
+  },
+  {
+    initialRouteName: 'AuthLoading'
+  }
+)
+const AppContainer = createAppContainer(AppSwitchStack)
 const App = () => {
   return (
     <ThemeProvider theme={theme}>

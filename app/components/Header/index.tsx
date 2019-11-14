@@ -4,7 +4,7 @@ import { NavigationDrawerProp } from 'react-navigation-drawer'
 import { Header, IconProps, HeaderIcon } from 'react-native-elements'
 import routes from '../../config/routes'
 import { name as appName } from '../../../app.json'
-import { TextProps, Platform } from 'react-native'
+import { TextProps, Platform, TouchableNativeFeedback } from 'react-native'
 import { withNavigation } from 'react-navigation'
 export interface HeaderProps {
   leftType?: 'menu' | 'back'
@@ -27,7 +27,7 @@ const AppHeader: React.FC<HeaderProps> = ({ navigation, title, leftType = 'menu'
     ellipsizeMode: 'tail'
   }
 
-  let leftComponent: HeaderIcon & { onPress?: any } = {}
+  let leftComponent: HeaderIcon & { onPress?: any; Component?: any; [key: string]: any } = {}
   switch (leftType) {
     case 'menu': {
       leftComponent = {
