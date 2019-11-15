@@ -6,6 +6,8 @@ import routes from '../../config/routes'
 import { name as appName } from '../../../app.json'
 import { TextProps, Platform, TouchableNativeFeedback } from 'react-native'
 import { withNavigation } from 'react-navigation'
+import LinearGradient from 'react-native-linear-gradient'
+
 export interface HeaderProps {
   leftType?: 'menu' | 'back'
   title?: string
@@ -24,7 +26,10 @@ const AppHeader: React.FC<HeaderProps> = ({ navigation, title, leftType = 'menu'
   const centerComponent: TextProps & { text: string } = {
     text: title,
     numberOfLines: 1,
-    ellipsizeMode: 'tail'
+    ellipsizeMode: 'tail',
+    style: {
+      color: '#fff'
+    }
   }
 
   let leftComponent: HeaderIcon & { onPress?: any; Component?: any; [key: string]: any } = {}
@@ -34,7 +39,8 @@ const AppHeader: React.FC<HeaderProps> = ({ navigation, title, leftType = 'menu'
         icon: 'menu',
         onPress: () => {
           navigation.openDrawer()
-        }
+        },
+        color: '#fff'
       }
       break
     }
@@ -54,6 +60,12 @@ const AppHeader: React.FC<HeaderProps> = ({ navigation, title, leftType = 'menu'
       placement="center"
       leftComponent={leftComponent}
       centerComponent={centerComponent}
+      ViewComponent={LinearGradient}
+      linearGradientProps={{
+        colors: ['#6b52ae', '#2089dc'],
+        start: { x: 0, y: 0.5 },
+        end: { x: 1, y: 0.5 }
+      }}
     ></Header>
   )
 }

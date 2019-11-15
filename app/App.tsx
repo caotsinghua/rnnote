@@ -11,7 +11,7 @@
 import React, { lazy, Suspense } from 'react'
 import Loading from './components/Loading'
 import { Text, Dimensions } from 'react-native'
-
+import { Provider } from 'react-redux'
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
@@ -19,6 +19,7 @@ import { ThemeProvider } from 'react-native-elements'
 import DrawerContent from './components/DrawerContent'
 import AuthLoading from './views/AuthLoading'
 import theme from './config/theme'
+import store from './store'
 const usingHermes = typeof HermesInternal === 'object' && HermesInternal !== null
 
 const AccountLazy = lazy(() => import('./views/Account'))
@@ -57,7 +58,8 @@ const DrawerStack = createDrawerNavigator(
     initialRouteName: 'Home',
     // drawerWidth
     contentComponent: DrawerContent, //侧边栏列表内容，暂时空置
-    drawerType: 'slide'
+    drawerType: 'slide',
+    // drawerBackgroundColor: 'transparent'
   }
 )
 /**
@@ -94,11 +96,14 @@ const AppSwitchStack = createSwitchNavigator(
   }
 )
 const AppContainer = createAppContainer(AppSwitchStack)
+
 const App = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <AppContainer />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <AppContainer />
+      </ThemeProvider>
+    </Provider>
   )
 }
 

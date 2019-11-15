@@ -1,11 +1,24 @@
 // import Storage from './storage'
 import qs from 'qs'
-import { Alert } from 'react-native'
+import Toast from 'react-native-root-toast'
 
 const defaultHeaders = {
   'Content-Type': 'application/json; charset=UTF-8'
 }
-
+const statusMessageMap = {
+  400: '请求错误',
+  401: '未授权，请登录',
+  403: '拒绝访问',
+  404: '请求地址出错',
+  408: '请求超时',
+  413: '上传文件过大！',
+  500: '服务器内部错误',
+  501: '服务未实现',
+  502: '网关错误',
+  503: '服务不可用',
+  504: '网关超时',
+  505: 'HTTP版本不受支持'
+}
 class Request {
   baseUrl: string
   constructor({ baseUrl = '' }) {
@@ -21,10 +34,10 @@ class Request {
       ...otherOptions
     }: {
       url: string
-      data: any
-      method: string
-      params: any
-      headers: any
+      data?: any
+      method?: string
+      params?: any
+      headers?: any
     },
     qsStringifyOptions = {} // qs.stringify的配置
   ) {
@@ -40,76 +53,33 @@ class Request {
       body: data, // post时使用
       headers,
       ...otherOptions
-    }).then(res => {
-      return this.handleResponse(res) // 处理response
     })
+      .then(res => {
+        return this.handleResponse(res) // 处理response
+      })
+      .catch(e => {
+        return this.handleError(e)
+      })
   }
 
   handleResponse(response: Response) {
-    return this.checkStatus(response)
-      .then(res => {
-        return res.json()
-      })
-      .catch(eRes => {
-        const { message } = eRes
-        Alert.alert(message)
-      })
+    return this.checkStatus(response).then(res => {
+      return res.json()
+    })
+  }
+  handleError(error: any) {
+    if (error.message === 'Network request failed') {
+      Toast.show('网络离线,请联网后重试.', { duration: Toast.durations.LONG })
+    } else if (error.response && error.message) {
+      Toast.show(error.message, { duration: Toast.durations.LONG })
+    }
   }
   checkStatus(response: Response): Promise<Response> {
     return new Promise((resolve, reject) => {
       if (response.status >= 200 && response.status < 300) {
         resolve(response)
       } else {
-        let message = '请求出错'
-        switch (response.status) {
-          case 400:
-            message = '请求错误'
-            break
-
-          case 401:
-            message = '未授权，请登录'
-            break
-
-          case 403:
-            message = '拒绝访问'
-            break
-
-          case 404:
-            message = '请求地址出错'
-            break
-
-          case 408:
-            message = '请求超时'
-            break
-          case 413:
-            message = '上传文件过大！'
-            break
-          case 500:
-            message = '服务器内部错误'
-            break
-
-          case 501:
-            message = '服务未实现'
-            break
-
-          case 502:
-            message = '网关错误'
-            break
-
-          case 503:
-            message = '服务不可用'
-            break
-
-          case 504:
-            message = '网关超时'
-            break
-
-          case 505:
-            message = 'HTTP版本不受支持'
-            break
-          default:
-        }
-
+        let message = (statusMessageMap as any)[response.status] || response.statusText
         reject({ response, message })
       }
     })

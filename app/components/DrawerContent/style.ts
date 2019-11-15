@@ -6,7 +6,7 @@ export default StyleSheet.create({
   },
   userBar: {
     backgroundColor: '#eee',
-    paddingVertical: 20,
+    paddingVertical: 30,
     paddingLeft: 20,
     flexDirection: 'row',
     alignItems: 'center'

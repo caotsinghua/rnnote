@@ -1,14 +1,19 @@
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useCallback, Dispatch } from 'react'
 import { View, Text, TouchableHighlight, Alert } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
 import styles from './styles'
 import { Button, Input, Avatar } from 'react-native-elements'
 import LinearGradient from 'react-native-linear-gradient'
 import { SafeAreaView } from 'react-navigation'
+import { connect } from 'react-redux'
+import { UserState } from 'app/store/modules/user'
+import Toast from 'react-native-root-toast'
 interface LoginProps {
   navigation: NavigationStackProp
+  user: UserState
+  onLogin: (payload: any, cb: Function) => void
 }
-const Login: React.FC<LoginProps> = () => {
+const Login: React.FC<LoginProps> = ({ navigation, user, onLogin }) => {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const [userNameError, setUsernameError] = useState('')
@@ -40,14 +45,33 @@ const Login: React.FC<LoginProps> = () => {
     }
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (loading) return
     const valid = ['userName', 'password'].every(k => validateField(k))
     if (valid) {
-      setLoading(true)
       // 提交登陆
+      setLoading(true)
+      onLogin(
+        {
+          userName,
+          password
+        },
+        (res: any) => {
+          setLoading(false)
+          console.log('res', res)
+          if (res) {
+            if (res.success) {
+              Toast.show('登陆成功')
+              navigation.navigate('Home')
+            } else {
+              Toast.show('登陆失败')
+            }
+          }
+        }
+      )
     }
   }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.loginContainer}>
@@ -123,4 +147,15 @@ const Login: React.FC<LoginProps> = () => {
   )
 }
 
-export default Login
+const mapDispatchToProps = (dispatch: Dispatch<{ type: string; payload: any; cb: Function }>) => {
+  return {
+    onLogin: (payload: any, cb: Function) => dispatch({ type: 'user/login', payload, cb })
+  }
+}
+const mapStateToProps = (state: { user: UserState }) => {
+  const { user } = state
+  return {
+    user
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(Login))
