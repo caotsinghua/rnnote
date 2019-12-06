@@ -28,7 +28,7 @@ const HomeLazy = lazy(() => import('./views/Home'))
 const LoginLazy = lazy(() => import('./views/Login'))
 const RegisterLazy = lazy(() => import('./views/Register'))
 const SettingsLazy = lazy(() => import('./views/Settings'))
-
+const NoteLazy = lazy(() => import('./views/Notes/Note'))
 const SuspenceHoc = (WrappedComponent: React.LazyExoticComponent<React.ComponentType<any>>) => (
   props: any
 ) => (
@@ -43,6 +43,7 @@ const Home = SuspenceHoc(HomeLazy)
 const Settings = SuspenceHoc(SettingsLazy)
 const Login = SuspenceHoc(LoginLazy)
 const Register = SuspenceHoc(RegisterLazy)
+const Note = SuspenceHoc(NoteLazy)
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 const drawerWidth = Math.min(WINDOW_WIDTH * 0.8, 300)
@@ -58,7 +59,7 @@ const DrawerStack = createDrawerNavigator(
     initialRouteName: 'Home',
     // drawerWidth
     contentComponent: DrawerContent, //侧边栏列表内容，暂时空置
-    drawerType: 'slide',
+    drawerType: 'slide'
     // drawerBackgroundColor: 'transparent'
   }
 )
@@ -67,7 +68,8 @@ const DrawerStack = createDrawerNavigator(
  */
 const HomeStack = createStackNavigator(
   {
-    DrawerStack
+    DrawerStack,
+    Note
   },
   {
     initialRouteName: 'DrawerStack',

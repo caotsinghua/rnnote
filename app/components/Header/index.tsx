@@ -1,10 +1,10 @@
 import React from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { NavigationDrawerProp } from 'react-navigation-drawer'
-import { Header, IconProps, HeaderIcon } from 'react-native-elements'
+import { Header, IconProps, HeaderIcon, SearchBar } from 'react-native-elements'
 import routes from '../../config/routes'
 import { name as appName } from '../../../app.json'
-import { TextProps, Platform, TouchableNativeFeedback } from 'react-native'
+import { TextProps, Platform, TouchableNativeFeedback, TouchableHighlight } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -40,7 +40,9 @@ const AppHeader: React.FC<HeaderProps> = ({ navigation, title, leftType = 'menu'
         onPress: () => {
           navigation.openDrawer()
         },
-        color: '#fff'
+        color: '#fff',
+        background: TouchableNativeFeedback.Ripple('#fff', false),
+        Component: TouchableNativeFeedback
       }
       break
     }
@@ -49,7 +51,8 @@ const AppHeader: React.FC<HeaderProps> = ({ navigation, title, leftType = 'menu'
         icon: 'arrow-back',
         onPress: () => {
           navigation.goBack()
-        }
+        },
+        color: '#fff'
       }
       break
     }
@@ -57,7 +60,7 @@ const AppHeader: React.FC<HeaderProps> = ({ navigation, title, leftType = 'menu'
 
   return (
     <Header
-      placement="center"
+      placement="left"
       leftComponent={leftComponent}
       centerComponent={centerComponent}
       ViewComponent={LinearGradient}

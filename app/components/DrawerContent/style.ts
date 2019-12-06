@@ -13,5 +13,8 @@ export default StyleSheet.create({
   },
   userInfo: {
     marginLeft: 15
+  },
+  activeMenu: {
+    backgroundColor: '#ccc'
   }
 })

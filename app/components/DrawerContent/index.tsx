@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { SafeAreaView, ScrollView, withNavigation } from 'react-navigation'
 import styles from './style'
-import { View, Alert } from 'react-native'
+import { View, Alert, StyleSheet } from 'react-native'
 import { Avatar, ListItem, Icon, Text } from 'react-native-elements'
 import routes from '../../config/routes'
 import { DrawerContentComponentProps } from 'react-navigation-drawer'
@@ -33,6 +33,7 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = ({ navigation }) =>
                 leftIcon={{ name: route.icon }}
                 bottomDivider
                 onPress={handleListItemPress(route.routeName)}
+                // style={StyleSheet.flatten([route.routeName===navigation.state.])}
               ></ListItem>
             )
           })}
