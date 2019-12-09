@@ -1,5 +1,12 @@
 import React, { useState, useRef, useCallback, Dispatch } from 'react'
-import { View, Text, TouchableHighlight, Alert } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableHighlight,
+  Alert,
+  KeyboardAvoidingView,
+  TouchableNativeFeedback
+} from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
 import styles from './styles'
 import { Button, Input, Avatar } from 'react-native-elements'
@@ -124,6 +131,7 @@ const Login: React.FC<LoginProps> = ({ navigation, user, onLogin }) => {
           }}
           icon={{ name: 'arrow-forward', color: '#fff', size: 25 }}
           buttonStyle={styles.loginButton}
+          background={TouchableNativeFeedback.Ripple('#ccc', true)}
           onPress={handleSubmit}
           loading={loading}
         ></Button>

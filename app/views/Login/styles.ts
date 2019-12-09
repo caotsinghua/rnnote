@@ -20,13 +20,13 @@ export default StyleSheet.create({
   loginForm: {
     alignSelf: 'stretch',
     marginHorizontal: 30,
-    marginBottom: 20
+    marginBottom: 15
   },
   loginButton: {
     width: 70,
     height: 70,
     borderRadius: 70,
-    marginTop: 25
+    marginTop: 0
   },
   inputContainer: { borderBottomWidth: 0, backgroundColor: '#eee', borderRadius: 50 },
   input: {

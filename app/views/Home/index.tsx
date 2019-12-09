@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { View } from 'react-native'
 import { Button } from 'react-native-elements'
 import Header from '../../components/Header'
@@ -15,24 +15,36 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ getNotes, notesData }) => {
+  const [queryData, setQueryData] = useState(undefined)
+  const getData = useCallback(
+    (callback?: Function) => {
+      getNotes(queryData,callback)
+    },
+    [queryData]
+  )
+
   useEffect(() => {
-    getNotes()
+    getData()
   }, [])
+
   const handleSearch = (query: any) => {
+    // 每次query是最新的，覆盖到querydata
+    setQueryData(query)
     getNotes(query)
   }
+
   return (
     <View style={styles.container}>
       <Header />
       <SearchHeader onSearch={handleSearch} />
-      <NoteList notesData={notesData} />
+      <NoteList notesData={notesData} onFetchData={getData} />
     </View>
   )
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    getNotes: (payload: any, cb?: Function) => dispatch({ type: 'notes/getNotes', payload, cb })
+    getNotes: (payload: any, callback?: Function) => dispatch({ type: 'notes/getNotes', payload, callback })
   }
 }
 const mapStateToProps = ({ notes }: { notes: NotesState }) => ({

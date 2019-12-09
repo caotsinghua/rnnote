@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, RefreshControl } from 'react-native'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { withNavigation, FlatList, SectionList } from 'react-navigation'
@@ -10,12 +10,24 @@ import styles from '../style'
 import NoteItem from './NoteItem'
 import { NoteSection } from 'app/store/modules/notes'
 
-export interface BookListProps {
+export interface NoteListProps {
   notesData: NoteSection[]
   navigation: NavigationDrawerProp
+  onFetchData: Function
 }
+const NoteList: React.FC<NoteListProps> = ({ notesData, navigation, onFetchData }) => {
+  const [refreshing, setRefreshing] = useState(false)
 
-const BookList: React.FC<BookListProps> = ({ notesData, navigation }) => {
+  const handleRefresh = () => {
+    setRefreshing(true)
+    onFetchData(() => {
+      setRefreshing(false)
+    })
+  }
+  const NoteRefreshControl = (
+    <RefreshControl refreshing={refreshing} onRefresh={handleRefresh}></RefreshControl>
+  )
+
   return (
     <SectionList
       sections={notesData}
@@ -24,6 +36,7 @@ const BookList: React.FC<BookListProps> = ({ notesData, navigation }) => {
       data={notesData}
       keyExtractor={(item, index) => index.toString()}
       stickySectionHeadersEnabled={true}
+      refreshControl={NoteRefreshControl}
     ></SectionList>
   )
 }
@@ -32,4 +45,4 @@ const renderSectionHeader = ({ section }: { section: any }) => (
     <Text style={styles.listItemTime}>{section.label}</Text>
   </View>
 )
-export default withNavigation(React.memo(BookList))
+export default withNavigation(React.memo(NoteList))

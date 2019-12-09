@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactComponentElement, ReactElement } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { NavigationDrawerProp } from 'react-navigation-drawer'
 import { Header, IconProps, HeaderIcon, SearchBar } from 'react-native-elements'
@@ -10,11 +10,21 @@ import LinearGradient from 'react-native-linear-gradient'
 
 export interface HeaderProps {
   leftType?: 'menu' | 'back'
+  leftComponent?: ReactElement
   title?: string
   navigation: NavigationStackProp & NavigationDrawerProp
 }
 
-const AppHeader: React.FC<HeaderProps> = ({ navigation, title, leftType = 'menu' }) => {
+type HeaderLeftComponent =
+  | (HeaderIcon & { onPress?: any; Component?: any; [key: string]: any })
+  | ReactElement
+
+const AppHeader: React.FC<HeaderProps> = ({
+  navigation,
+  title,
+  leftType = 'menu',
+  leftComponent
+}) => {
   const {
     state: { routeName }
   } = navigation
@@ -32,36 +42,38 @@ const AppHeader: React.FC<HeaderProps> = ({ navigation, title, leftType = 'menu'
     }
   }
 
-  let leftComponent: HeaderIcon & { onPress?: any; Component?: any; [key: string]: any } = {}
-  switch (leftType) {
-    case 'menu': {
-      leftComponent = {
-        icon: 'menu',
-        onPress: () => {
-          navigation.openDrawer()
-        },
-        color: '#fff',
-        background: TouchableNativeFeedback.Ripple('#fff', false),
-        Component: TouchableNativeFeedback
+  let headerLeft: HeaderLeftComponent = leftComponent ? leftComponent : {}
+  if (!leftComponent) {
+    switch (leftType) {
+      case 'menu': {
+        headerLeft = {
+          icon: 'menu',
+          onPress: () => {
+            navigation.openDrawer()
+          },
+          color: '#fff',
+          background: TouchableNativeFeedback.Ripple('#fff', false),
+          Component: TouchableNativeFeedback
+        }
+        break
       }
-      break
-    }
-    case 'back': {
-      leftComponent = {
-        icon: 'arrow-back',
-        onPress: () => {
-          navigation.goBack()
-        },
-        color: '#fff'
+      case 'back': {
+        headerLeft = {
+          icon: 'arrow-back',
+          onPress: () => {
+            navigation.goBack()
+          },
+          color: '#fff'
+        }
+        break
       }
-      break
     }
   }
 
   return (
     <Header
       placement="left"
-      leftComponent={leftComponent}
+      leftComponent={headerLeft}
       centerComponent={centerComponent}
       ViewComponent={LinearGradient}
       linearGradientProps={{

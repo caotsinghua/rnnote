@@ -85,14 +85,16 @@ export const notesReducer = (state: NotesState = initialState, action: NoteActio
 }
 
 export const effects = {
-  *getNotes({ payload: query = {} }: { payload: Payload }) {
+  *getNotes({ payload: query = {}, callback }: { payload: Payload; callback?: Function }) {
     console.log('查询notes')
     put({ type: NoteActionTypes.SET_PAGE, payload: query.page })
     put({ type: NoteActionTypes.SET_PAGE_SIZE, payload: query.pageSize })
     put({ type: NoteActionTypes.SET_LOADING, payload: true })
     const res = yield call(getNotes, query)
     put({ type: NoteActionTypes.SET_LOADING, payload: false })
-
+    if (callback) {
+      callback()
+    }
     if (res.success && res.data) {
       console.log(parseNotes(res.data.list))
       yield put({
