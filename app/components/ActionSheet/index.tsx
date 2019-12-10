@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import Modal from 'react-native-modal'
 import { View, FlatList, ListRenderItem, Text } from 'react-native'
 import styles from './styles'
@@ -9,6 +9,7 @@ export interface ActionSheetProps {
   renderItem?: ListRenderItem<ActionSheetItem>
   onItemPress: (item: ActionSheetItem, index: number) => void
   title?: ReactElement // actionsheet标题
+  onCloseModal: () => void
 }
 
 export interface ActionSheetItem {
@@ -16,7 +17,7 @@ export interface ActionSheetItem {
   key: string | number
 }
 const ActionSheet: React.FC<ActionSheetProps> = React.memo(
-  ({ isVisible, data, renderItem, onItemPress, title }) => {
+  ({ isVisible, data, renderItem, onItemPress, title, onCloseModal }) => {
     if (typeof renderItem === 'undefined') {
       renderItem = ({ item, index }) => {
         const handleItemPress = () => {
@@ -39,8 +40,18 @@ const ActionSheet: React.FC<ActionSheetProps> = React.memo(
         Title = title
       }
     }
+
+    const closeModal = () => {
+      onCloseModal()
+    }
+
     return (
-      <Modal isVisible={isVisible} style={styles.modal}>
+      <Modal
+        isVisible={isVisible}
+        style={styles.modal}
+        onBackdropPress={closeModal}
+        onBackButtonPress={closeModal}
+      >
         <View style={styles.content}>
           {Title}
           <FlatList

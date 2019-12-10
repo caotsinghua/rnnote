@@ -15,7 +15,12 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ isVisible, onCancel }) => {
     onCancel()
   }
   return (
-    <Modal isVisible={isVisible} style={styles.container}>
+    <Modal
+      isVisible={isVisible}
+      style={styles.container}
+      onBackButtonPress={onCancel}
+      onBackdropPress={onCancel}
+    >
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>添加笔记本</Text>

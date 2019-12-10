@@ -8,6 +8,7 @@ import { NavigationStackProp } from 'react-navigation-stack'
 import ActionSheet, { ActionSheetItem } from '../../../components/ActionSheet'
 import AddBookButton from './components/AddBookButton'
 import AddBookModal from './components/AddBookModal'
+import Toast from 'react-native-root-toast'
 interface NoteProps {
   navigation: NavigationStackProp
 }
@@ -15,13 +16,20 @@ const Note: React.FC<NoteProps> = React.memo(({ navigation }) => {
   const [bookName, setBookName] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
   const [bookModalVisible, setBookModalVisible] = useState(false)
-
+  const [content, setContent] = useState('') // 笔记内容
   const leftComponent = (
     <View style={styles.headerLeft}>
-      <Icon name="arrow-back" color="#fff" />
-      <Icon name="save" color="#fff" containerStyle={styles.headerIcon} />
+      <Icon
+        name="arrow-back"
+        color="#fff"
+        onPress={() => {
+          navigation.goBack()
+        }}
+      />
+      <Icon name="save" color="#fff" containerStyle={styles.headerIcon} onPress={save} />
     </View>
   )
+  function save() {}
   const handleSelectBook = () => {
     setModalVisible(true)
   }
@@ -58,10 +66,23 @@ const Note: React.FC<NoteProps> = React.memo(({ navigation }) => {
         ></Button>
         <Icon name="info" />
       </View>
+      {/* 笔记内容,暂时不用富文本编辑 */}
+      <Input
+        containerStyle={styles.contentContainer}
+        inputContainerStyle={styles.contentInputContainer}
+        multiline
+        placeholder="在此输入内容..."
+        value={content}
+        onChangeText={text => setContent(text)}
+      />
+
       <ActionSheet
         isVisible={modalVisible}
         data={actionSheetData}
         onItemPress={handleActionSelect}
+        onCloseModal={() => {
+          setModalVisible(false)
+        }}
         title={<AddBookButton onPress={handleAddBook} />}
       />
       <AddBookModal

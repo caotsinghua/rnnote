@@ -22,5 +22,11 @@ export default StyleSheet.create({
   },
   bookNameButton: {
     justifyContent: 'flex-start'
+  },
+  contentContainer: {
+    flex: 1
+  },
+  contentInputContainer: {
+    borderBottomWidth: 0
   }
 })
