@@ -12,7 +12,7 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.6.2",
     "dayjs": "^1.8.17",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "qs": "^6.9.1",
     "react": "16.9.0",
     "react-native": "0.61.4",
